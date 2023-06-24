@@ -43,9 +43,6 @@ fn device_can_update_coil_to_enabled() {
             coil_value: CoilValue(false)
         }
     );
-
-    
-
 }
 
 #[test]

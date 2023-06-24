@@ -1,14 +1,21 @@
-use super::function_code::FunctionCode;
+use std::u8;
 
-pub struct ProtocolDataUnit {
-    pub function_code: FunctionCode,
-    pub data: ProtocolDataUnitData,
+use super::program_data_unit::ReadCoilsResponse;
+
+pub trait ResponseFrame {
+    fn generate_result_frame(&self) -> Vec<u8>;
 }
 
-pub enum ProtocolDataUnitData {
-    ReadCoilsProtocolDataUnit{ read_coils_protocol_data_unit: ReadCoilsProtocolDataUnit}
-}
+impl ResponseFrame for ReadCoilsResponse {
+    fn generate_result_frame(&self) -> Vec<u8> {
+        let size = self.byte_count;
 
-pub struct ReadCoilsProtocolDataUnit {
-    pub starting_address: u16
+        let mut frame: Vec<u8> = vec![0x1, size];
+
+        let mut bytes = self.coil_status.clone();
+
+        frame.append(&mut bytes);
+
+        frame
+    }
 }
