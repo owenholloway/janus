@@ -1,2 +1,2 @@
-pub mod dnp3;
+pub mod dnp_1815;
 pub mod modbus;

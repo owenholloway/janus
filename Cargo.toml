@@ -6,6 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dotenv = "0.15.0"
+log = "0.4"
+simple_logger = "4.1.0"
+tokio = { version = "1.28.2", features = ["full"] }
 
 
 [dev-dependencies]
