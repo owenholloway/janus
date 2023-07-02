@@ -1,7 +1,7 @@
 use std::env;
 
 use dotenv::dotenv;
-use log::info;
+use log::{info, warn};
 
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
@@ -13,13 +13,22 @@ async fn main()  -> Result<(), Box<dyn std::error::Error>> {
     simple_logger::init_with_env().unwrap();
 
     info!("Project Janus");
+    
+    let bind_address = match env::var("BIND_ADDRESS") {
+        Ok(value) => value,
+        Err(_) => {
+            warn!("Could not find env BIND_ADDRESS, using defaul value 127.0.0.1");
+            "127.0.0.1".to_string()
+        }
+    };
 
-    let bind_address = 
-        env::var("BIND_ADDRESS")
-        .unwrap_or("127.0.0.1".to_string());
-    let bind_port = 
-        env::var("BIND_PORT")
-        .unwrap_or("5000".to_string());
+    let bind_port = match env::var("BIND_PORT") {
+        Ok(value) => value,
+        Err(_) => {
+            warn!("Could not find env BIND_PORT, using defaul value 5000");
+            "5000".to_string()
+        }
+    };
 
     let address = 
         format!("{}:{}", bind_address, bind_port);
@@ -47,8 +56,5 @@ async fn main()  -> Result<(), Box<dyn std::error::Error>> {
         });
 
     }
-
-
-    Ok(())
 
 }
