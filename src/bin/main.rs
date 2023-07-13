@@ -3,7 +3,7 @@ use std::env;
 use dotenv::dotenv;
 use log::{info, warn};
 
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::io::AsyncReadExt;
 use tokio::net::TcpListener;
 
 #[tokio::main]
