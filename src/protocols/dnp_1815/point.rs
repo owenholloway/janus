@@ -1,3 +1,1 @@
-pub enum Point {
-    
-}
+pub enum Point {}

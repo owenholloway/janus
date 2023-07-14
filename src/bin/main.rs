@@ -7,13 +7,13 @@ use tokio::io::AsyncReadExt;
 use tokio::net::TcpListener;
 
 #[tokio::main]
-async fn main()  -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
     simple_logger::init_with_env().unwrap();
 
     info!("Project Janus");
-    
+
     let bind_address = match env::var("BIND_ADDRESS") {
         Ok(value) => value,
         Err(_) => {
@@ -30,8 +30,7 @@ async fn main()  -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
-    let address = 
-        format!("{}:{}", bind_address, bind_port);
+    let address = format!("{}:{}", bind_address, bind_port);
 
     let listener = TcpListener::bind(address).await.unwrap();
 
@@ -47,14 +46,8 @@ async fn main()  -> Result<(), Box<dyn std::error::Error>> {
                     .await
                     .expect("failed to read data from socket");
 
-                if block == 0x00 {
-
-                }
-
+                if block == 0x00 {}
             }
-
         });
-
     }
-
 }

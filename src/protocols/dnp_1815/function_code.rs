@@ -1,3 +1,1 @@
-pub enum FunctionCode {
-
-}
+pub enum FunctionCode {}

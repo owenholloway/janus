@@ -27,10 +27,9 @@ fn bench_coil_processing(coil_count: u16) {
     match result {
         Ok(_) => {
             assert!(true)
-        },
+        }
         Err(_) => assert!(false),
     }
-
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
