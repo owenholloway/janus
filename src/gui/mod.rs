@@ -1,3 +1,4 @@
+use egui::Ui;
 use serde::{Deserialize, Serialize};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
@@ -45,10 +46,21 @@ impl eframe::App for SimulatorGUI {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
         let Self { label, value } = self;
 
-        egui::TopBottomPanel::top("top").show(ctx, |ui| {
-            egui::menu::bar(ui, |ui| {
-                ui.menu_button("File", |ui| if ui.button("Quit").clicked() {})
-            })
-        });
+        // egui::TopBottomPanel::top("top").show(ctx, |ui| {
+        //     egui::menu::bar(ui, |ui| {
+        //         ui.menu_button("File", |ui| if ui.button("Quit").clicked() {})
+        //     })
+        // });
+
+        egui::CentralPanel::default().show(ctx, central_panel );
+
     }
+}
+
+fn central_panel(ui: &mut Ui) {
+    ui.horizontal(|ui| {
+        if ui.button("-").clicked() {
+
+        }
+    });
 }
