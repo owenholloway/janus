@@ -52,15 +52,10 @@ impl eframe::App for SimulatorGUI {
         //     })
         // });
 
-        egui::CentralPanel::default().show(ctx, central_panel );
-
+        egui::CentralPanel::default().show(ctx, central_panel);
     }
 }
 
 fn central_panel(ui: &mut Ui) {
-    ui.horizontal(|ui| {
-        if ui.button("-").clicked() {
-
-        }
-    });
+    ui.horizontal(|ui| if ui.button("-").clicked() {});
 }

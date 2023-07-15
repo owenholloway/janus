@@ -3,7 +3,8 @@ use std::io::Write;
 use std::net::TcpStream;
 
 use dotenv::dotenv;
-use log::{trace, info, warn};
+use janus::transport::{bind_tcp, TcpTransport};
+use log::{info, trace, warn};
 
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
@@ -32,44 +33,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
-    let address = format!("{}:{}", bind_address, bind_port);
+    let listener = bind_tcp(bind_address, bind_port).await.unwrap();
 
-    let listener = TcpListener::bind(address).await.unwrap();
+    let device = janus::protocols::modbus::device::create_device();
 
-    loop {
-        let (mut socket, _) = listener.accept().await.unwrap();
+    device.open_connection(listener).await;
 
-        tokio::spawn(async move {
-            
-            let mut buffer = vec![0, 255];
+    Ok(())
 
-            socket.write(b"Hello who are you? ").await;
-
-            let mut frame: Vec<u8> = vec![];
-
-            loop {
-                let block = socket
-                    .read(&mut buffer)
-                    .await
-                    .expect("failed to read data from socket");
-
-                for byte in &buffer {
-                    if *byte as char == '\n' {
-                        socket.write(&frame).await;
-                        trace!("{:?}", &frame);
-                        frame.clear();
-                        break;
-                    }
-                    frame.push(*byte);
-                }
-
-                
-
-            }
-        });
-    }
 }
 
-async fn process_frame(socket: &mut TcpStream, frame: Vec<u8>) {
-    socket.write(&frame);
-}

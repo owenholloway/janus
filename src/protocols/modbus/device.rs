@@ -3,6 +3,13 @@ use super::data::{
     input_register::InputRegister,
 };
 
+use async_trait::async_trait;
+use log::{error, trace};
+
+use crate::transport::TcpTransport;
+use tokio::net::TcpListener;
+use tokio::io::AsyncReadExt;
+
 pub struct Device {
     pub discrete_inputs: Vec<DiscreteInput>,
     pub coils: Vec<Coil>,
@@ -16,5 +23,51 @@ pub fn create_device() -> Device {
         coils: [Coil::Disabled; 65535].to_vec(),
         input_registers: [InputRegister::Disabled; 65535].to_vec(),
         holding_registers: [HoldingRegister::Disabled; 65535].to_vec(),
+    }
+}
+
+
+#[async_trait]
+impl TcpTransport for Device {
+    async fn open_connection(&self, listener: TcpListener) {
+        
+        loop {
+            let result 
+            = listener.accept().await;
+
+            //Exit early
+            if result.is_err() {
+                error!("Failed to open socket {:?}", result.err());
+                return;
+            }
+
+            let (mut socket, _) = result.unwrap();
+
+            tokio::spawn(async move {
+                let mut buffer = vec![0, 255];
+                let mut frame: Vec<u8> = vec![];
+    
+                let _ = socket
+                    .read(&mut buffer)
+                    .await
+                    .expect("failed to read data from socket");
+    
+                for byte in &buffer {
+                    trace!("{:?}", byte);
+                    if *byte as char == '\n' {
+                        trace!("{:?}", &frame);
+                        frame.clear();
+                        break;
+                    }
+                    frame.push(*byte);
+                }
+    
+            });
+
+        }
+
+
+
+
     }
 }
