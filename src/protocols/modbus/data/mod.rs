@@ -1,6 +1,6 @@
-use self::coil::Coil;
+use self::x01_read_coil::Coil;
 
-pub mod coil;
+pub mod x01_read_coil;
 pub mod discrete_input;
 pub mod holding_register;
 pub mod input_register;

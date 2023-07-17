@@ -1,5 +1,5 @@
 use crate::protocols::modbus::{
-    data::coil::{Coil, CoilValue},
+    data::x01_read_coil::{Coil, CoilValue},
     device::Device,
 };
 

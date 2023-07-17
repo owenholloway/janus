@@ -48,21 +48,21 @@ fn process_coil(
 
     for coil in coils {
         match coil {
-            super::data::coil::Coil::EnabledReadOnly { coil_value } => {
+            super::data::x01_read_coil::Coil::EnabledReadOnly { coil_value } => {
                 (index, block) = boolean_block_addition(index, block, coil_value.0);
                 if index == 0 {
                     result.push(block);
                     block = 0x0;
                 }
             }
-            super::data::coil::Coil::EnabledReadWrite { coil_value } => {
+            super::data::x01_read_coil::Coil::EnabledReadWrite { coil_value } => {
                 (index, block) = boolean_block_addition(index, block, coil_value.0);
                 if index == 0 {
                     result.push(block);
                     block = 0x0;
                 }
             }
-            super::data::coil::Coil::Disabled => {
+            super::data::x01_read_coil::Coil::Disabled => {
                 return Err(ExceptionResponse {
                     function_code: 0x81,
                     exception_code: 0x04,

@@ -1,6 +1,6 @@
 use crate::protocols::modbus::{
     data::{
-        coil::{Coil, CoilValue},
+        x01_read_coil::{Coil, CoilValue},
         discrete_input::DiscreteInput,
         input_register::InputRegister,
     },

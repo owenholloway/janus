@@ -1,5 +1,5 @@
 use super::data::{
-    coil::Coil, discrete_input::DiscreteInput, holding_register::HoldingRegister,
+    x01_read_coil::Coil, discrete_input::DiscreteInput, holding_register::HoldingRegister,
     input_register::InputRegister,
 };
 
