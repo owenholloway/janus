@@ -18,42 +18,5 @@ pub async fn bind_tcp(
 
 #[async_trait]
 pub trait TcpTransport {
-    async fn open_connection(&self, listener: TcpListener);
+    async fn open_connection(&self, listener: &TcpListener);
 }
-
-/*
-async fn open_socket() {
-
-    loop {
-        let (mut socket, _) = listener.accept().await.unwrap();
-
-        tokio::spawn(async move {
-
-            let mut buffer = vec![0, 255];
-
-            socket.write(b"Hello who are you? ").await;
-
-            let mut frame: Vec<u8> = vec![];
-
-            loop {
-                let block = socket
-                    .read(&mut buffer)
-                    .await
-                    .expect("failed to read data from socket");
-
-                for byte in &buffer {
-                    if *byte as char == '\n' {
-                        socket.write(&frame).await;
-                        trace!("{:?}", &frame);
-                        frame.clear();
-                        break;
-                    }
-                    frame.push(*byte);
-                }
-
-
-
-            }
-        });
-    }
-} */

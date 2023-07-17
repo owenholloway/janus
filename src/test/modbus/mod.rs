@@ -5,3 +5,6 @@ pub mod data;
 pub mod processing;
 
 pub mod givens;
+
+#[cfg(test)]
+pub mod requests;

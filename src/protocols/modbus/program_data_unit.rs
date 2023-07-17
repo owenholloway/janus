@@ -1,6 +1,7 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum ProtocolDataUnitRequest {
     ReadCoilsRequest(ReadCoilsRequest),
+    UnknownRequest,
 }
 
 pub struct ExceptionResponse {

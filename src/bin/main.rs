@@ -1,13 +1,8 @@
-use std::env;
-use std::io::Write;
-use std::net::TcpStream;
-
 use dotenv::dotenv;
-use janus::transport::{bind_tcp, TcpTransport};
-use log::{info, trace, warn};
+use std::env;
 
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use tokio::net::TcpListener;
+use janus::transport::{bind_tcp, TcpTransport};
+use log::{info, warn};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -37,9 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let device = janus::protocols::modbus::device::create_device();
 
-    device.open_connection(listener).await;
+    device.open_connection(&listener).await;
 
     Ok(())
-
 }
-

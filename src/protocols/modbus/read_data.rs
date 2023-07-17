@@ -20,6 +20,7 @@ impl ReadData for super::device::Device {
     ) -> Result<ProtocolDataUnitResponse, ExceptionResponse> {
         match pdu {
             ProtocolDataUnitRequest::ReadCoilsRequest(data) => process_coil(self, data),
+            ProtocolDataUnitRequest::UnknownRequest => todo!(),
         }
     }
 }
