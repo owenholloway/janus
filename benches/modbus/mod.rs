@@ -24,9 +24,9 @@ pub fn bench_coil_processing(coil_count: u16) {
 
     match result {
         Ok(_) => {
-            assert!(true)
+            {}
         }
-        Err(_) => assert!(false),
+        Err(_) => panic!(),
     }
 }
 
@@ -49,8 +49,8 @@ pub fn bench_discrete_input_processing(discrete_input_count: u16) {
 
     match result {
         Ok(_) => {
-            assert!(true)
+            {}
         }
-        Err(_) => assert!(false),
+        Err(_) => panic!(),
     }
 }
