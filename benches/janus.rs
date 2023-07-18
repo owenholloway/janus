@@ -1,7 +1,7 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 
 use janus::protocols::modbus::{
-    data::x01_read_coil::{Coil, CoilValue},
+    data::coil::{Coil, CoilValue},
     device::{create_device, Device},
     program_data_unit::{ProtocolDataUnitRequest, ReadCoilsRequest},
     read_data::ReadData,

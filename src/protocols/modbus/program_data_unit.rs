@@ -1,6 +1,9 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum ProtocolDataUnitRequest {
+    /// Code 0x01 <br/> Section 6.1
     ReadCoilsRequest(ReadCoilsRequest),
+    /// Code 0x02 <br/> Section 6.2
+    ReadDiscreteInputsRequest(ReadDiscreteInputsRequest),
     UnknownRequest,
 }
 
@@ -14,8 +17,16 @@ pub enum ProtocolDataUnitResponse {
     ReadDiscreteInputsResponse(ReadDiscreteInputsResponse),
 }
 
+/// Code 0x01 <br/> Section 6.1
 #[derive(Debug, Clone, PartialEq)]
 pub struct ReadCoilsRequest {
+    pub starting_address: u16,
+    pub quantity_of_coils: u16,
+}
+
+/// Code 0x02 <br/> Section 6.2
+#[derive(Debug, Clone, PartialEq)]
+pub struct ReadDiscreteInputsRequest {
     pub starting_address: u16,
     pub quantity_of_coils: u16,
 }

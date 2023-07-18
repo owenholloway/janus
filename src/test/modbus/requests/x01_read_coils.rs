@@ -3,7 +3,7 @@ use serde::__private::de;
 use crate::{
     protocols::modbus::{
         device::Device,
-        frame::{ResponseFrame, RequestFrame},
+        frame::{RequestFrame, ResponseFrame},
         program_data_unit::{ProtocolDataUnitRequest, ProtocolDataUnitResponse, ReadCoilsRequest},
         read_data::ReadData,
     },
@@ -76,7 +76,7 @@ fn valid_request_gets_frame() {
 
 #[test]
 fn valid_frame_translates_to_request_lsb() {
-    let frame: Vec<u8> = vec![1,0,1,0,1];
+    let frame: Vec<u8> = vec![1, 0, 1, 0, 1];
 
     let pdu = frame.generate_request_frame();
 
@@ -84,15 +84,14 @@ fn valid_frame_translates_to_request_lsb() {
         ProtocolDataUnitRequest::ReadCoilsRequest(request) => {
             assert_eq!(request.starting_address, 1);
             assert_eq!(request.quantity_of_coils, 1);
-        },
+        }
         _ => panic!(),
     }
-
 }
 
 #[test]
 fn valid_frame_translates_to_request_msb() {
-    let frame: Vec<u8> = vec![1,1,0,1,0];
+    let frame: Vec<u8> = vec![1, 1, 0, 1, 0];
 
     let pdu = frame.generate_request_frame();
 
@@ -100,15 +99,14 @@ fn valid_frame_translates_to_request_msb() {
         ProtocolDataUnitRequest::ReadCoilsRequest(request) => {
             assert_eq!(request.starting_address, 16);
             assert_eq!(request.quantity_of_coils, 16);
-        },
+        }
         _ => panic!(),
     }
-
 }
 
 #[test]
 fn valid_frame_translates_to_request() {
-    let frame: Vec<u8> = vec![1,1,1,1,1];
+    let frame: Vec<u8> = vec![1, 1, 1, 1, 1];
 
     let pdu = frame.generate_request_frame();
 
@@ -116,16 +114,14 @@ fn valid_frame_translates_to_request() {
         ProtocolDataUnitRequest::ReadCoilsRequest(request) => {
             assert_eq!(request.starting_address, 17);
             assert_eq!(request.quantity_of_coils, 17);
-        },
+        }
         _ => panic!(),
     }
-
 }
-
 
 #[test]
 fn valid_frame_translates_to_request_gets_response() {
-    let frame: Vec<u8> = vec![1,6,4,0,11];
+    let frame: Vec<u8> = vec![1, 6, 4, 0, 11];
 
     let pdu = frame.generate_request_frame();
 
@@ -137,10 +133,7 @@ fn valid_frame_translates_to_request_gets_response() {
         ProtocolDataUnitRequest::ReadCoilsRequest(request) => {
             assert_eq!(request.starting_address, 100);
             assert_eq!(request.quantity_of_coils, 11);
-
-
-
-        },
+        }
         _ => panic!(),
     }
 
@@ -164,7 +157,4 @@ fn valid_frame_translates_to_request_gets_response() {
             panic!();
         }
     }
-
 }
-
-
