@@ -1,3 +1,6 @@
+// Copyright Owen Holloway 2023
+// License: AGPL-3.0-or-later
+
 use janus::protocols::modbus::{
     data::{coil::{Coil, CoilValue}, discrete_input::{DiscreteInput, DiscreteInputValue}},
     device::{create_device, Device},

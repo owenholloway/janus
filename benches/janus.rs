@@ -1,3 +1,6 @@
+// Copyright Owen Holloway 2023
+// License: AGPL-3.0-or-later
+
 mod modbus;
 
 use criterion::{criterion_group, criterion_main, Criterion};

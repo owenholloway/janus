@@ -1,3 +1,6 @@
+// Copyright Owen Holloway 2023
+// License: AGPL-3.0-or-later
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ProtocolDataUnitRequest {
     /// Code 0x01 <br/> Section 6.1

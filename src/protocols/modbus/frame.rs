@@ -1,3 +1,6 @@
+// Copyright Owen Holloway 2023
+// License: AGPL-3.0-or-later
+
 use std::u8;
 
 use super::program_data_unit::{ProtocolDataUnitRequest, ReadCoilsRequest, ReadCoilsResponse, ReadDiscreteInputsRequest, ReadDiscreteInputsResponse};

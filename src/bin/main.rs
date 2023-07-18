@@ -1,11 +1,16 @@
+// Copyright Owen Holloway 2023
+// License: AGPL-3.0-or-later
+
 use dotenv::dotenv;
 use std::env;
 
-use janus::transport::{bind_tcp, TcpTransport};
+use janus::{transport::{bind_tcp, TcpTransport}, supporting::print_license};
 use log::{info, warn};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    print_license();
+
     dotenv().ok();
 
     simple_logger::init_with_env().unwrap();
