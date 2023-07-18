@@ -2,22 +2,22 @@ use crate::{
     protocols::modbus::{
         device::Device,
         frame::{RequestFrame, ResponseFrame},
-        program_data_unit::{ProtocolDataUnitRequest, ProtocolDataUnitResponse, ReadCoilsRequest},
+        program_data_unit::{ProtocolDataUnitRequest, ProtocolDataUnitResponse, ReadDiscreteInputsRequest},
         read_data::ReadData,
     },
-    test::modbus::givens::given_device_coils_test_setup_01,
+    test::modbus::givens::given_device_coils_test_setup_02,
 };
 
 #[test]
 fn valid_request_gets_response() {
     let mut device: Device = crate::protocols::modbus::device::create_device();
 
-    device = given_device_coils_test_setup_01(device);
+    device = given_device_coils_test_setup_02(device);
 
     let pdu: ProtocolDataUnitRequest =
-        ProtocolDataUnitRequest::ReadCoilsRequest(ReadCoilsRequest {
+        ProtocolDataUnitRequest::ReadDiscreteInputsRequest(ReadDiscreteInputsRequest {
             starting_address: 100,
-            quantity_of_coils: 11,
+            quantity_of_inputs: 11,
         });
 
     let result = device.process_request(pdu);
@@ -26,7 +26,7 @@ fn valid_request_gets_response() {
 
     match result {
         Ok(pdu) => match pdu {
-            ProtocolDataUnitResponse::ReadCoilsResponse(response) => {
+            ProtocolDataUnitResponse::ReadDiscreteInputsResponse(response) => {
                 assert_eq!(response.coil_status[0], 0x05);
                 assert_eq!(response.coil_status[1], 0x06)
             }
@@ -42,12 +42,12 @@ fn valid_request_gets_response() {
 fn valid_request_gets_frame() {
     let mut device: Device = crate::protocols::modbus::device::create_device();
 
-    device = given_device_coils_test_setup_01(device);
+    device = given_device_coils_test_setup_02(device);
 
     let pdu: ProtocolDataUnitRequest =
-        ProtocolDataUnitRequest::ReadCoilsRequest(ReadCoilsRequest {
+        ProtocolDataUnitRequest::ReadDiscreteInputsRequest(ReadDiscreteInputsRequest {
             starting_address: 100,
-            quantity_of_coils: 11,
+            quantity_of_inputs: 11,
         });
 
     let result = device.process_request(pdu);
@@ -56,7 +56,7 @@ fn valid_request_gets_frame() {
 
     match result {
         Ok(pdu) => match pdu {
-            ProtocolDataUnitResponse::ReadCoilsResponse(response) => {
+            ProtocolDataUnitResponse::ReadDiscreteInputsResponse(response) => {
                 let frame = response.generate_result_frame();
 
                 assert_eq!(frame[0], 0x01);
@@ -74,14 +74,14 @@ fn valid_request_gets_frame() {
 
 #[test]
 fn valid_frame_translates_to_request_lsb() {
-    let frame: Vec<u8> = vec![1, 0, 1, 0, 1];
+    let frame: Vec<u8> = vec![2, 0, 1, 0, 1];
 
     let pdu = frame.generate_request_frame();
 
     match &pdu {
-        ProtocolDataUnitRequest::ReadCoilsRequest(request) => {
+        ProtocolDataUnitRequest::ReadDiscreteInputsRequest(request) => {
             assert_eq!(request.starting_address, 1);
-            assert_eq!(request.quantity_of_coils, 1);
+            assert_eq!(request.quantity_of_inputs, 1);
         }
         _ => panic!(),
     }
@@ -89,14 +89,14 @@ fn valid_frame_translates_to_request_lsb() {
 
 #[test]
 fn valid_frame_translates_to_request_msb() {
-    let frame: Vec<u8> = vec![1, 1, 0, 1, 0];
+    let frame: Vec<u8> = vec![2, 1, 0, 1, 0];
 
     let pdu = frame.generate_request_frame();
 
     match &pdu {
-        ProtocolDataUnitRequest::ReadCoilsRequest(request) => {
+        ProtocolDataUnitRequest::ReadDiscreteInputsRequest(request) => {
             assert_eq!(request.starting_address, 16);
-            assert_eq!(request.quantity_of_coils, 16);
+            assert_eq!(request.quantity_of_inputs, 16);
         }
         _ => panic!(),
     }
@@ -104,14 +104,14 @@ fn valid_frame_translates_to_request_msb() {
 
 #[test]
 fn valid_frame_translates_to_request() {
-    let frame: Vec<u8> = vec![1, 1, 1, 1, 1];
+    let frame: Vec<u8> = vec![2, 1, 1, 1, 1];
 
     let pdu = frame.generate_request_frame();
 
     match &pdu {
-        ProtocolDataUnitRequest::ReadCoilsRequest(request) => {
+        ProtocolDataUnitRequest::ReadDiscreteInputsRequest(request) => {
             assert_eq!(request.starting_address, 17);
-            assert_eq!(request.quantity_of_coils, 17);
+            assert_eq!(request.quantity_of_inputs, 17);
         }
         _ => panic!(),
     }
@@ -119,18 +119,18 @@ fn valid_frame_translates_to_request() {
 
 #[test]
 fn valid_frame_translates_to_request_gets_response() {
-    let frame: Vec<u8> = vec![1, 6, 4, 0, 11];
+    let frame: Vec<u8> = vec![2, 6, 4, 0, 11];
 
     let pdu = frame.generate_request_frame();
 
     let mut device: Device = crate::protocols::modbus::device::create_device();
 
-    device = given_device_coils_test_setup_01(device);
+    device = given_device_coils_test_setup_02(device);
 
     match &pdu {
-        ProtocolDataUnitRequest::ReadCoilsRequest(request) => {
+        ProtocolDataUnitRequest::ReadDiscreteInputsRequest(request) => {
             assert_eq!(request.starting_address, 100);
-            assert_eq!(request.quantity_of_coils, 11);
+            assert_eq!(request.quantity_of_inputs, 11);
         }
         _ => panic!(),
     }
@@ -141,7 +141,7 @@ fn valid_frame_translates_to_request_gets_response() {
 
     match result {
         Ok(pdu) => match pdu {
-            ProtocolDataUnitResponse::ReadCoilsResponse(response) => {
+            ProtocolDataUnitResponse::ReadDiscreteInputsResponse(response) => {
                 let frame = response.generate_result_frame();
 
                 assert_eq!(frame[0], 0x01);
