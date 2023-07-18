@@ -1,19 +1,22 @@
-use std::env;
+// Copyright Owen Holloway 2023
+// License: AGPL-3.0-or-later
 
 use dotenv::dotenv;
+use std::env;
+
+use janus::{transport::{bind_tcp, TcpTransport}, supporting::print_license};
 use log::{info, warn};
 
-use tokio::io::AsyncReadExt;
-use tokio::net::TcpListener;
-
 #[tokio::main]
-async fn main()  -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    print_license();
+
     dotenv().ok();
 
     simple_logger::init_with_env().unwrap();
 
     info!("Project Janus");
-    
+
     let bind_address = match env::var("BIND_ADDRESS") {
         Ok(value) => value,
         Err(_) => {
@@ -30,31 +33,11 @@ async fn main()  -> Result<(), Box<dyn std::error::Error>> {
         }
     };
 
-    let address = 
-        format!("{}:{}", bind_address, bind_port);
+    let listener = bind_tcp(bind_address, bind_port).await.unwrap();
 
-    let listener = TcpListener::bind(address).await.unwrap();
+    let device = janus::protocols::modbus::device::create_device();
 
-    loop {
-        let (mut socket, _) = listener.accept().await.unwrap();
+    device.open_connection(&listener).await;
 
-        tokio::spawn(async move {
-            let mut buffer = vec![0, 255];
-
-            loop {
-                let block = socket
-                    .read(&mut buffer)
-                    .await
-                    .expect("failed to read data from socket");
-
-                if block == 0x00 {
-
-                }
-
-            }
-
-        });
-
-    }
-
+    Ok(())
 }

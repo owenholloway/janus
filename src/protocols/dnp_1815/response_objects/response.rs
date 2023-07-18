@@ -1,8 +1,11 @@
+// Copyright Owen Holloway 2023
+// License: AGPL-3.0-or-later
+
 use super::x01_read::ReadResponse;
 
 pub struct ResponseMessage {
     pub response: Response,
-    pub indicators: Indicators
+    pub indicators: Indicators,
 }
 
 pub enum Response {
@@ -32,15 +35,15 @@ pub struct Indicators {
     pub device_restart: bool,
     /// MSB IIN2.0 <br>  
     pub no_func_code_support: bool,
-    /// MSB IIN2.1 <br> 
+    /// MSB IIN2.1 <br>
     pub object_unknown: bool,
-    /// MSB IIN2.2 <br> 
+    /// MSB IIN2.2 <br>
     pub parameter_error: bool,
-    /// MSB IIN2.3 <br> 
+    /// MSB IIN2.3 <br>
     pub event_buffer_overflow: bool,
-    /// MSB IIN2.4 <br> 
+    /// MSB IIN2.4 <br>
     pub already_executing: bool,
-    /// MSB IIN2.5 <br> 
+    /// MSB IIN2.5 <br>
     pub config_corrupt: bool,
     /// MSB IIN2.6 <br> Reserved bit
     pub reservered_bit_2: bool,
