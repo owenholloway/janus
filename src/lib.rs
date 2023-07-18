@@ -3,6 +3,6 @@
 
 //pub mod gui;
 pub mod protocols;
+pub mod supporting;
 mod test;
 pub mod transport;
-pub mod supporting;

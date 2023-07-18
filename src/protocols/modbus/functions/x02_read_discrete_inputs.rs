@@ -4,15 +4,11 @@
 use crate::protocols::modbus::{
     data::discrete_input::DiscreteInput,
     program_data_unit::{
-        ExceptionResponse, 
-        ProtocolDataUnitResponse, 
-        ReadDiscreteInputsRequest, 
+        ExceptionResponse, ProtocolDataUnitResponse, ReadDiscreteInputsRequest,
         ReadDiscreteInputsResponse,
     },
     read_data::ProtocolDataUnitProcessing,
 };
-
-
 
 impl ProtocolDataUnitProcessing for ReadDiscreteInputsRequest {
     fn process(

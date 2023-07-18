@@ -3,9 +3,7 @@
 
 use super::{
     device::Device,
-    program_data_unit::{
-        ExceptionResponse, ProtocolDataUnitRequest, ProtocolDataUnitResponse,
-    },
+    program_data_unit::{ExceptionResponse, ProtocolDataUnitRequest, ProtocolDataUnitResponse},
 };
 
 pub trait ReadData {

@@ -5,7 +5,9 @@ use crate::{
     protocols::modbus::{
         device::Device,
         frame::{RequestFrame, ResponseFrame},
-        program_data_unit::{ProtocolDataUnitRequest, ProtocolDataUnitResponse, ReadDiscreteInputsRequest},
+        program_data_unit::{
+            ProtocolDataUnitRequest, ProtocolDataUnitResponse, ReadDiscreteInputsRequest,
+        },
         read_data::ReadData,
     },
     test::modbus::givens::given_device_coils_test_setup_02,

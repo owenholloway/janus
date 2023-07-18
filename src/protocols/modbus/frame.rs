@@ -3,7 +3,10 @@
 
 use std::u8;
 
-use super::program_data_unit::{ProtocolDataUnitRequest, ReadCoilsRequest, ReadCoilsResponse, ReadDiscreteInputsRequest, ReadDiscreteInputsResponse};
+use super::program_data_unit::{
+    ProtocolDataUnitRequest, ReadCoilsRequest, ReadCoilsResponse, ReadDiscreteInputsRequest,
+    ReadDiscreteInputsResponse,
+};
 
 pub trait RequestFrame {
     fn generate_request_frame(&self) -> ProtocolDataUnitRequest;
@@ -66,9 +69,7 @@ impl ResponseFrame for ReadCoilsResponse {
 }
 
 impl ResponseFrame for ReadDiscreteInputsResponse {
-    
     fn generate_result_frame(&self) -> Vec<u8> {
-        
         let size = self.byte_count;
 
         let mut frame: Vec<u8> = vec![0x1, size];

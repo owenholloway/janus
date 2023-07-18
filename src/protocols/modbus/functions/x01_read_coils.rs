@@ -4,10 +4,7 @@
 use crate::protocols::modbus::{
     data::coil::Coil,
     program_data_unit::{
-        ExceptionResponse, 
-        ProtocolDataUnitResponse, 
-        ReadCoilsRequest, 
-        ReadCoilsResponse,
+        ExceptionResponse, ProtocolDataUnitResponse, ReadCoilsRequest, ReadCoilsResponse,
     },
     read_data::ProtocolDataUnitProcessing,
 };

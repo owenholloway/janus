@@ -2,7 +2,10 @@
 // License: AGPL-3.0-or-later
 
 use crate::protocols::modbus::{
-    data::{coil::{Coil, CoilValue}, discrete_input::{DiscreteInputValue, DiscreteInput}},
+    data::{
+        coil::{Coil, CoilValue},
+        discrete_input::{DiscreteInput, DiscreteInputValue},
+    },
     device::Device,
 };
 
@@ -43,7 +46,6 @@ pub fn given_device_coils_test_setup_01(mut device: Device) -> Device {
 
     device
 }
-
 
 pub fn given_device_coils_test_setup_02(mut device: Device) -> Device {
     device.discrete_inputs[100] = DiscreteInput::EnabledReadOnly {

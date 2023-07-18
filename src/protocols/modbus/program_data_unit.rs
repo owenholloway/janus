@@ -10,11 +10,13 @@ pub enum ProtocolDataUnitRequest {
     UnknownRequest,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExceptionResponse {
-    pub function_code: u16,
-    pub exception_code: u16,
+    pub function_code: u8,
+    pub exception_code: u8,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ProtocolDataUnitResponse {
     ReadCoilsResponse(ReadCoilsResponse),
     ReadDiscreteInputsResponse(ReadDiscreteInputsResponse),

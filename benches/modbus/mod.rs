@@ -2,7 +2,10 @@
 // License: AGPL-3.0-or-later
 
 use janus::protocols::modbus::{
-    data::{coil::{Coil, CoilValue}, discrete_input::{DiscreteInput, DiscreteInputValue}},
+    data::{
+        coil::{Coil, CoilValue},
+        discrete_input::{DiscreteInput, DiscreteInputValue},
+    },
     device::{create_device, Device},
     program_data_unit::{ProtocolDataUnitRequest, ReadCoilsRequest, ReadDiscreteInputsRequest},
     read_data::ReadData,
@@ -26,9 +29,7 @@ pub fn bench_coil_processing(coil_count: u16) {
     let result = device.process_request(pdu);
 
     match result {
-        Ok(_) => {
-            {}
-        }
+        Ok(_) => {}
         Err(_) => panic!(),
     }
 }
@@ -51,9 +52,7 @@ pub fn bench_discrete_input_processing(discrete_input_count: u16) {
     let result = device.process_request(pdu);
 
     match result {
-        Ok(_) => {
-            {}
-        }
+        Ok(_) => {}
         Err(_) => panic!(),
     }
 }

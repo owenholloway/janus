@@ -2,7 +2,8 @@
 // License: AGPL-3.0-or-later
 
 pub fn print_license() {
-    println!("
+    println!(
+        "
     Janus: Multipurpose Protocol Converter & Simulator
     
     Copyright (C) Owen Holloway 2023
@@ -19,5 +20,6 @@ pub fn print_license() {
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
-    ");
+    "
+    );
 }
