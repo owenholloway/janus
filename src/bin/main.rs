@@ -5,11 +5,13 @@ use dotenv::dotenv;
 use std::env;
 
 use janus::{
-    protocols::modbus::data::coil::{Coil, CoilValue},
+    protocols::modbus::{data::coil::{Coil, CoilValue}, device::Device},
     supporting::print_license,
     transport::{bind_tcp, TcpTransport},
 };
 use log::{info, warn};
+
+static DEVICE: Device;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
