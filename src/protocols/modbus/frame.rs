@@ -22,6 +22,12 @@ impl RequestFrame for Vec<u8> {
     }
 }
 
+impl ProtocolDataUnitRequest {
+    pub fn new(bytes: Vec<u8>) -> ProtocolDataUnitRequest {
+        bytes.generate_request_frame()
+    }
+}
+
 fn generate_read_coil_request(frame: Vec<u8>) -> ProtocolDataUnitRequest {
     if frame.len() < 5 {
         return ProtocolDataUnitRequest::ReadCoilsRequest(ReadCoilsRequest {

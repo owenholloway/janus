@@ -11,8 +11,6 @@ use janus::{
 };
 use log::{info, warn};
 
-static DEVICE: Device;
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     print_license();

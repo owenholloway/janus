@@ -21,7 +21,7 @@ impl ReadData for super::device::Device {
         match pdu {
             ProtocolDataUnitRequest::ReadCoilsRequest(data) => data.process(self),
             ProtocolDataUnitRequest::ReadDiscreteInputsRequest(data) => data.process(self),
-            ProtocolDataUnitRequest::UnknownRequest => todo!(),
+            ProtocolDataUnitRequest::UnknownRequest => Err(ExceptionResponse { function_code: 00, exception_code: 00 }),
         }
     }
 }
