@@ -168,7 +168,7 @@ async fn listener_loop(device: &Device, listener: &TcpListener) {
                     };
 
                     info!("response {:?}", &response);
-                    let _ = socket.write_all(&response);
+                    let _ = socket.write_all(&response).await;
 
                     frame_control = TcpFrameControl::new();
                 }
