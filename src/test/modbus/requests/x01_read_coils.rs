@@ -3,7 +3,7 @@
 
 use crate::{
     protocols::modbus::{
-        device::Device,
+        unit::Unit,
         frame::{RequestFrame, ResponseFrame},
         program_data_unit::{ProtocolDataUnitRequest, ProtocolDataUnitResponse, ReadCoilsRequest},
         read_data::ReadData,
@@ -13,7 +13,7 @@ use crate::{
 
 #[test]
 fn valid_request_gets_response() {
-    let mut device: Device = crate::protocols::modbus::device::create_device();
+    let mut device: Unit = crate::protocols::modbus::unit::create_device();
 
     device = given_device_coils_test_setup_01(device);
 
@@ -43,7 +43,7 @@ fn valid_request_gets_response() {
 
 #[test]
 fn valid_request_gets_frame() {
-    let mut device: Device = crate::protocols::modbus::device::create_device();
+    let mut device: Unit = crate::protocols::modbus::unit::create_device();
 
     device = given_device_coils_test_setup_01(device);
 
@@ -126,7 +126,7 @@ fn valid_frame_translates_to_request_gets_response() {
 
     let pdu = frame.generate_request_frame();
 
-    let mut device: Device = crate::protocols::modbus::device::create_device();
+    let mut device: Unit = crate::protocols::modbus::unit::create_device();
 
     device = given_device_coils_test_setup_01(device);
 

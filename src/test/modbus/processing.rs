@@ -2,14 +2,14 @@
 // License: AGPL-3.0-or-later
 
 use crate::protocols::modbus::{
-    device::Device,
+    unit::Unit,
     program_data_unit::{ProtocolDataUnitRequest, ReadCoilsRequest},
     read_data::ReadData,
 };
 
 #[test]
 fn invalid_coil_request_gets_error() {
-    let device: Device = crate::protocols::modbus::device::create_device();
+    let device: Unit = crate::protocols::modbus::unit::create_device();
 
     let pdu: ProtocolDataUnitRequest =
         ProtocolDataUnitRequest::ReadCoilsRequest(ReadCoilsRequest {

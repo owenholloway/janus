@@ -6,13 +6,13 @@ use janus::protocols::modbus::{
         coil::{Coil, CoilValue},
         discrete_input::{DiscreteInput, DiscreteInputValue},
     },
-    device::{create_device, Device},
+    unit::{create_device, Unit},
     program_data_unit::{ProtocolDataUnitRequest, ReadCoilsRequest, ReadDiscreteInputsRequest},
     read_data::ReadData,
 };
 
 pub fn bench_coil_processing(coil_count: u16) {
-    let mut device: Device = create_device();
+    let mut device: Unit = create_device();
 
     for index in 0..coil_count {
         device.coils[index as usize] = Coil::EnabledReadOnly {
@@ -35,7 +35,7 @@ pub fn bench_coil_processing(coil_count: u16) {
 }
 
 pub fn bench_discrete_input_processing(discrete_input_count: u16) {
-    let mut device: Device = create_device();
+    let mut device: Unit = create_device();
 
     for index in 0..discrete_input_count {
         device.discrete_inputs[index as usize] = DiscreteInput::EnabledReadOnly {

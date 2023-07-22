@@ -12,7 +12,7 @@ use crate::protocols::modbus::{
 impl ProtocolDataUnitProcessing for ReadCoilsRequest {
     fn process(
         &self,
-        device: &crate::protocols::modbus::device::Device,
+        device: &crate::protocols::modbus::unit::Unit,
     ) -> Result<ProtocolDataUnitResponse, ExceptionResponse> {
         if !(self.quantity_of_coils <= 0x07D0 && self.quantity_of_coils >= 0x0001) {
             return Err(ExceptionResponse {

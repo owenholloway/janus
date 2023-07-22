@@ -2,7 +2,7 @@
 // License: AGPL-3.0-or-later
 
 use super::{
-    device::Device,
+    unit::Unit,
     program_data_unit::{ExceptionResponse, ProtocolDataUnitRequest, ProtocolDataUnitResponse},
 };
 
@@ -13,7 +13,7 @@ pub trait ReadData {
     ) -> Result<ProtocolDataUnitResponse, ExceptionResponse>;
 }
 
-impl ReadData for super::device::Device {
+impl ReadData for super::unit::Unit {
     fn process_request(
         &self,
         pdu: ProtocolDataUnitRequest,
@@ -27,5 +27,5 @@ impl ReadData for super::device::Device {
 }
 
 pub trait ProtocolDataUnitProcessing {
-    fn process(&self, device: &Device) -> Result<ProtocolDataUnitResponse, ExceptionResponse>;
+    fn process(&self, device: &Unit) -> Result<ProtocolDataUnitResponse, ExceptionResponse>;
 }

@@ -6,10 +6,10 @@ use crate::protocols::modbus::{
         coil::{Coil, CoilValue},
         discrete_input::{DiscreteInput, DiscreteInputValue},
     },
-    device::Device,
+    unit::Unit,
 };
 
-pub fn given_device_coils_test_setup_01(mut device: Device) -> Device {
+pub fn given_device_coils_test_setup_01(mut device: Unit) -> Unit {
     device.coils[100] = Coil::EnabledReadOnly {
         coil_value: CoilValue(true),
     };
@@ -47,7 +47,7 @@ pub fn given_device_coils_test_setup_01(mut device: Device) -> Device {
     device
 }
 
-pub fn given_device_coils_test_setup_02(mut device: Device) -> Device {
+pub fn given_device_coils_test_setup_02(mut device: Unit) -> Unit {
     device.discrete_inputs[100] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(true),
     };

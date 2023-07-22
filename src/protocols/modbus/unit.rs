@@ -7,15 +7,15 @@ use super::data::{
 };
 
 #[derive(Debug, Clone)]
-pub struct Device {
+pub struct Unit {
     pub discrete_inputs: Vec<DiscreteInput>,
     pub coils: Vec<Coil>,
     pub input_registers: Vec<InputRegister>,
     pub holding_registers: Vec<HoldingRegister>,
 }
 
-pub fn create_device() -> Device {
-    Device {
+pub fn create_device() -> Unit {
+    Unit {
         discrete_inputs: [DiscreteInput::Disabled; 65535].to_vec(),
         coils: [Coil::Disabled; 65535].to_vec(),
         input_registers: [InputRegister::Disabled; 65535].to_vec(),
@@ -23,3 +23,6 @@ pub fn create_device() -> Device {
     }
 }
 
+impl Unit {
+    
+}

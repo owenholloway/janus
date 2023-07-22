@@ -5,7 +5,7 @@ use dotenv::dotenv;
 use std::env;
 
 use janus::{
-    protocols::modbus::{data::coil::{Coil, CoilValue}, device::Device},
+    protocols::modbus::{data::{coil::{Coil, CoilValue}, discrete_input::{DiscreteInput, DiscreteInputValue}}, unit::Unit},
     supporting::print_license,
     transport::{bind_tcp, TcpTransport},
 };
@@ -39,7 +39,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let listener = bind_tcp(bind_address, bind_port).await.unwrap();
 
-    let mut device = janus::protocols::modbus::device::create_device();
+    let mut device = janus::protocols::modbus::unit::create_device();
     
     device.coils[99] = Coil::EnabledReadOnly {
         coil_value: CoilValue(true),
@@ -76,6 +76,43 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     device.coils[110] = Coil::EnabledReadOnly {
         coil_value: CoilValue(true),
+    };
+
+    device.discrete_inputs[99] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(true),
+    };
+    device.discrete_inputs[100] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(true),
+    };
+    device.discrete_inputs[101] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(false),
+    };
+    device.discrete_inputs[102] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(true),
+    };
+    device.discrete_inputs[103] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(false),
+    };
+    device.discrete_inputs[104] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(false),
+    };
+    device.discrete_inputs[105] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(false),
+    };
+    device.discrete_inputs[106] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(false),
+    };
+    device.discrete_inputs[107] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(false),
+    };
+    device.discrete_inputs[108] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(false),
+    };
+    device.discrete_inputs[109] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(true),
+    };
+    device.discrete_inputs[110] = DiscreteInput::EnabledReadOnly {
+        discrete_value: DiscreteInputValue(true),
     };
 
     device.open_connection(&listener).await;

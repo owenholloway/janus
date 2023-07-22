@@ -13,7 +13,7 @@ use crate::protocols::modbus::{
 impl ProtocolDataUnitProcessing for ReadDiscreteInputsRequest {
     fn process(
         &self,
-        device: &crate::protocols::modbus::device::Device,
+        device: &crate::protocols::modbus::unit::Unit,
     ) -> Result<ProtocolDataUnitResponse, ExceptionResponse> {
         if !(self.quantity_of_inputs <= 0x07D0 && self.quantity_of_inputs >= 0x0001) {
             return Err(ExceptionResponse {

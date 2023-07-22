@@ -8,7 +8,8 @@ use log::{error, trace};
 use tokio::net::TcpListener;
 use tokio_serial::new;
 
-use crate::protocols::modbus::device::Device;
+use crate::protocols::modbus::data::coil::{Coil, CoilValue};
+use crate::protocols::modbus::unit::Unit;
 use crate::protocols::modbus::frame::RequestFrame;
 use crate::protocols::modbus::frame::ResponseFrame;
 use crate::protocols::modbus::program_data_unit::{ProtocolDataUnitResponse, ProtocolDataUnitRequest, ExceptionResponse};
@@ -122,7 +123,7 @@ impl TcpFrameControl {
 }
 
 #[async_trait]
-impl TcpTransport for Device {
+impl TcpTransport for Unit {
     async fn open_connection(&self, listener: &TcpListener) {
         loop {
             listener_loop(self, listener).await;
@@ -130,7 +131,7 @@ impl TcpTransport for Device {
     }
 }
 
-async fn listener_loop(device: &Device, listener: &TcpListener) {
+async fn listener_loop(device: &Unit, listener: &TcpListener) {
     let result = listener.accept().await;
 
     //Exit early
@@ -141,12 +142,13 @@ async fn listener_loop(device: &Device, listener: &TcpListener) {
 
     let (mut socket, _) = result.unwrap(); 
 
-    let device = (*device).clone();
+    let mut device = (*device).clone();
 
     tokio::spawn(async move {
         let mut buffer = vec![0, 255];
 
         let mut frame_control = TcpFrameControl::new();
+        let mut last_transaction = 0;
 
         loop {
             let _ = socket
@@ -156,6 +158,25 @@ async fn listener_loop(device: &Device, listener: &TcpListener) {
             for byte in &buffer {
 
                 frame_control = frame_control.process_bytes(*byte);
+
+                let invalid_frame = 
+                    last_transaction != 0 &&
+                    frame_control.transaction != 0 &&
+                    (last_transaction + 1) != frame_control.transaction;
+
+                if invalid_frame {
+                    error!("Invalid frame!! {:?}", frame_control);
+
+                    match socket.flush().await {
+                        Ok(_) => return ,
+                        Err(error) => error!("Couldn't flush frame!! {:?}", error),
+                    }
+
+                    match socket.shutdown().await {
+                        Ok(_) => return ,
+                        Err(error) => error!("Couldn't shutdown!! {:?}", error),
+                    }
+                }
 
                 if frame_control.frame_complete {
                     info!("request  {:?}", &frame_control.request_frame);
@@ -169,6 +190,8 @@ async fn listener_loop(device: &Device, listener: &TcpListener) {
 
                     info!("response {:?}", &response);
                     let _ = socket.write_all(&response).await;
+
+                    last_transaction = frame_control.transaction;
 
                     frame_control = TcpFrameControl::new();
                 }
