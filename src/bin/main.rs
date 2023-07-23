@@ -2,11 +2,12 @@
 // License: AGPL-3.0-or-later
 
 use dotenv::dotenv;
+use tokio::io::AsyncReadExt;
 use std::env;
 
 use janus::{
     protocols::modbus::{data::{coil::{Coil, CoilValue}, discrete_input::{DiscreteInput, DiscreteInputValue}}, unit::Unit},
-    supporting::print_license,
+    supporting::{print_license, units_db::ModbusUnit},
     transport::{bind_tcp, TcpTransport},
 };
 use log::{info, warn};
@@ -39,83 +40,88 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let listener = bind_tcp(bind_address, bind_port).await.unwrap();
 
-    let mut device = janus::protocols::modbus::unit::create_device();
-    
-    device.coils[99] = Coil::EnabledReadOnly {
+    let mut device = ModbusUnit::default();
+
+    device.unit.coils[99] = Coil::EnabledReadOnly {
         coil_value: CoilValue(true),
     };
-    device.coils[100] = Coil::EnabledReadOnly {
+    device.unit.coils[100] = Coil::EnabledReadOnly {
         coil_value: CoilValue(true),
     };
-    device.coils[101] = Coil::EnabledReadOnly {
+    device.unit.coils[101] = Coil::EnabledReadOnly {
         coil_value: CoilValue(false),
     };
-    device.coils[102] = Coil::EnabledReadOnly {
+    device.unit.coils[102] = Coil::EnabledReadOnly {
         coil_value: CoilValue(true),
     };
-    device.coils[103] = Coil::EnabledReadOnly {
+    device.unit.coils[103] = Coil::EnabledReadOnly {
         coil_value: CoilValue(false),
     };
-    device.coils[104] = Coil::EnabledReadOnly {
+    device.unit.coils[104] = Coil::EnabledReadOnly {
         coil_value: CoilValue(false),
     };
-    device.coils[105] = Coil::EnabledReadOnly {
+    device.unit.coils[105] = Coil::EnabledReadOnly {
         coil_value: CoilValue(false),
     };
-    device.coils[106] = Coil::EnabledReadOnly {
+    device.unit.coils[106] = Coil::EnabledReadOnly {
         coil_value: CoilValue(false),
     };
-    device.coils[107] = Coil::EnabledReadOnly {
+    device.unit.coils[107] = Coil::EnabledReadOnly {
         coil_value: CoilValue(false),
     };
-    device.coils[108] = Coil::EnabledReadOnly {
+    device.unit.coils[108] = Coil::EnabledReadOnly {
         coil_value: CoilValue(false),
     };
-    device.coils[109] = Coil::EnabledReadOnly {
+    device.unit.coils[109] = Coil::EnabledReadOnly {
         coil_value: CoilValue(true),
     };
-    device.coils[110] = Coil::EnabledReadOnly {
+    device.unit.coils[110] = Coil::EnabledReadOnly {
         coil_value: CoilValue(true),
     };
 
-    device.discrete_inputs[99] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[99] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(true),
     };
-    device.discrete_inputs[100] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[100] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(true),
     };
-    device.discrete_inputs[101] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[101] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(false),
     };
-    device.discrete_inputs[102] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[102] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(true),
     };
-    device.discrete_inputs[103] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[103] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(false),
     };
-    device.discrete_inputs[104] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[104] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(false),
     };
-    device.discrete_inputs[105] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[105] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(false),
     };
-    device.discrete_inputs[106] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[106] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(false),
     };
-    device.discrete_inputs[107] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[107] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(false),
     };
-    device.discrete_inputs[108] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[108] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(false),
     };
-    device.discrete_inputs[109] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[109] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(true),
     };
-    device.discrete_inputs[110] = DiscreteInput::EnabledReadOnly {
+    device.unit.discrete_inputs[110] = DiscreteInput::EnabledReadOnly {
         discrete_value: DiscreteInputValue(true),
     };
 
-    device.open_connection(&listener).await;
+    let unit = device.unit.clone();
+    let coil_tx = device.tx_coil.clone();
+
+    tokio::join!(
+        device.create_listener(),
+        unit.open_connection(&listener, &coil_tx));
 
     Ok(())
 }

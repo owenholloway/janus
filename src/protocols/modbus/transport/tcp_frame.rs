@@ -1,20 +1,19 @@
 // Copyright Owen Holloway 2023
 // License: AGPL-3.0-or-later
 
-use async_trait::async_trait;
 
 use log::info;
 use log::{error, trace};
 use tokio::net::TcpListener;
-use tokio_serial::new;
+use tokio::sync::mpsc::Sender;
 
+use crate::protocols::modbus::data::BooleanValueOperations;
 use crate::protocols::modbus::data::coil::{Coil, CoilValue};
 use crate::protocols::modbus::unit::Unit;
-use crate::protocols::modbus::frame::RequestFrame;
 use crate::protocols::modbus::frame::ResponseFrame;
 use crate::protocols::modbus::program_data_unit::{ProtocolDataUnitResponse, ProtocolDataUnitRequest, ExceptionResponse};
 use crate::protocols::modbus::read_data::ReadData;
-use crate::transport::TcpTransport;
+use crate::supporting::units_db::{ModbusUnit, CoilUpdate};
 use tokio::io::AsyncReadExt;
 use tokio::io::AsyncWriteExt;
 
@@ -122,16 +121,15 @@ impl TcpFrameControl {
 
 }
 
-#[async_trait]
-impl TcpTransport for Unit {
-    async fn open_connection(&self, listener: &TcpListener) {
+impl Unit {
+    pub async fn open_connection(&self, listener: &TcpListener, coil_update: &Sender<CoilUpdate>) {
         loop {
-            listener_loop(self, listener).await;
+            listener_loop(self, listener, coil_update).await;
         }
     }
 }
 
-async fn listener_loop(device: &Unit, listener: &TcpListener) {
+async fn listener_loop(in_unit: &Unit, listener: &TcpListener, coil_update: &Sender<CoilUpdate>) {
     let result = listener.accept().await;
 
     //Exit early
@@ -142,7 +140,8 @@ async fn listener_loop(device: &Unit, listener: &TcpListener) {
 
     let (mut socket, _) = result.unwrap(); 
 
-    let mut device = (*device).clone();
+    let mut main_unit = in_unit.clone();
+    let coil_tx = (*coil_update).clone();
 
     tokio::spawn(async move {
         let mut buffer = vec![0, 255];
@@ -183,10 +182,16 @@ async fn listener_loop(device: &Unit, listener: &TcpListener) {
 
                     let pdu = ProtocolDataUnitRequest::new(frame_control.modbus_pdu_frame());
 
-                    let response = match device.process_request(pdu) {
+                    let response = match main_unit.process_request(pdu) {
                         Ok(good) => frame_control.prepare_return_good_frame(good),
                         Err(bad) => frame_control.prepare_return_bad_frame(bad),
                     };
+
+                    let previous_value = main_unit.coils[100].get_value();
+
+                    main_unit.coils[100] = Coil::EnabledReadOnly { coil_value: CoilValue(!previous_value) };
+
+                    coil_tx.send(CoilUpdate { value: main_unit.coils[100], no: 100 }).await;
 
                     info!("response {:?}", &response);
                     let _ = socket.write_all(&response).await;
