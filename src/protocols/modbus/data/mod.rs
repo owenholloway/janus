@@ -13,11 +13,9 @@ pub struct AddressedCoil {
     pub coil: Coil,
 }
 
-
 pub trait BooleanValueOperations {
     fn get_value(&self) -> bool;
 }
-
 
 pub trait ByteValueOperations {
     fn get_value(&self) -> u16;

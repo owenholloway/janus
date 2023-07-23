@@ -2,9 +2,9 @@
 // License: AGPL-3.0-or-later
 
 use crate::protocols::modbus::{
-    unit::Unit,
     program_data_unit::{ProtocolDataUnitRequest, ReadCoilsRequest},
     read_data::ReadData,
+    unit::Unit,
 };
 
 #[test]

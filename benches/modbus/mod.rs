@@ -6,9 +6,9 @@ use janus::protocols::modbus::{
         coil::{Coil, CoilValue},
         discrete_input::{DiscreteInput, DiscreteInputValue},
     },
-    unit::{create_device, Unit},
     program_data_unit::{ProtocolDataUnitRequest, ReadCoilsRequest, ReadDiscreteInputsRequest},
     read_data::ReadData,
+    unit::{create_device, Unit},
 };
 
 pub fn bench_coil_processing(coil_count: u16) {

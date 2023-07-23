@@ -3,10 +3,10 @@
 
 use crate::{
     protocols::modbus::{
-        unit::Unit,
         frame::{RequestFrame, ResponseFrame},
         program_data_unit::{ProtocolDataUnitRequest, ProtocolDataUnitResponse, ReadCoilsRequest},
         read_data::ReadData,
+        unit::Unit,
     },
     test::modbus::givens::given_device_coils_test_setup_01,
 };

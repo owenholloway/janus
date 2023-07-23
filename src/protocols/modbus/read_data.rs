@@ -2,8 +2,8 @@
 // License: AGPL-3.0-or-later
 
 use super::{
-    unit::Unit,
     program_data_unit::{ExceptionResponse, ProtocolDataUnitRequest, ProtocolDataUnitResponse},
+    unit::Unit,
 };
 
 pub trait ReadData {
@@ -21,7 +21,10 @@ impl ReadData for super::unit::Unit {
         match pdu {
             ProtocolDataUnitRequest::ReadCoilsRequest(data) => data.process(self),
             ProtocolDataUnitRequest::ReadDiscreteInputsRequest(data) => data.process(self),
-            ProtocolDataUnitRequest::UnknownRequest => Err(ExceptionResponse { function_code: 00, exception_code: 00 }),
+            ProtocolDataUnitRequest::UnknownRequest => Err(ExceptionResponse {
+                function_code: 00,
+                exception_code: 00,
+            }),
         }
     }
 }

@@ -2,11 +2,18 @@
 // License: AGPL-3.0-or-later
 
 use dotenv::dotenv;
-use tokio::io::AsyncReadExt;
-use std::env;
+use std::{env, time::Duration};
+use tokio::time::sleep;
 
 use janus::{
-    protocols::modbus::{data::{coil::{Coil, CoilValue}, discrete_input::{DiscreteInput, DiscreteInputValue}}, unit::Unit},
+    protocols::modbus::{
+        data::{
+            coil::{Coil, CoilValue},
+            discrete_input::{DiscreteInput, DiscreteInputValue},
+            BooleanValueOperations,
+        },
+        unit::Unit,
+    },
     supporting::{print_license, units_db::ModbusUnit},
     transport::{bind_tcp, TcpTransport},
 };
@@ -116,12 +123,59 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         discrete_value: DiscreteInputValue(true),
     };
 
-    let unit = device.unit.clone();
-    let coil_tx = device.tx_coil.clone();
+    let device_00 = device.unit.clone();
+    let tx_mpsc_00 = device.tx_mpsc.clone();
+    let rx_watch00 = device.rx_watch.clone();
+
+    let tx_mpsc = device.tx_mpsc.clone();
+    let rx_watch = device.rx_watch.clone();
+
+    let flipper = async move {
+
+        loop {
+            sleep(Duration::from_millis(2000)).await;
+
+            let unit = rx_watch.borrow().clone();
+
+            let coil = unit.coils[100].get_value();
+
+            tx_mpsc.send(janus::supporting::units_db::UpdatedObject::Coil {
+                value: Coil::EnabledReadOnly {
+                    coil_value: CoilValue(!coil),
+                },
+                no: 100,
+            }).await;
+
+            let coil = unit.coils[101].get_value();
+
+            tx_mpsc.send(janus::supporting::units_db::UpdatedObject::Coil {
+                value: Coil::EnabledReadOnly {
+                    coil_value: CoilValue(!coil),
+                },
+                no: 101,
+            }).await;
+
+            let coil = unit.coils[102].get_value();
+
+            tx_mpsc.send(janus::supporting::units_db::UpdatedObject::Coil {
+                value: Coil::EnabledReadOnly {
+                    coil_value: CoilValue(!coil),
+                },
+                no: 102,
+            }).await;
+        }
+    };
 
     tokio::join!(
         device.create_listener(),
-        unit.open_connection(&listener, &coil_tx));
+        janus::protocols::modbus::transport::tcp_frame::open_connection(
+            &listener,
+            &device_00,
+            &tx_mpsc_00,
+            &rx_watch00
+        ),
+        flipper
+    );
 
     Ok(())
 }
